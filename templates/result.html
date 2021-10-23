@@ -1,0 +1,33 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}/>
+<title>Unicoder decomposition</title>
+</head>
+
+<body>
+
+<p>Input string: <b>{{ string }}</b></p>
+
+<table>
+    <tr>
+        <th>&nbsp;</th>
+        <th>Code (dec)</th>
+        <th>Code (hex)</th>
+        <th>Name</th>
+        <th>Category</th>
+    </tr>
+    {% for info in infos %}
+    <tr class="row">
+        <td class="char">{{ info.char }}</td>
+        <td class="decimal" align="right">{{ info.code }}</td>
+        <td class="hex" align="right">0x{{ '%0x' % info.code }}</td>
+        <td class="name">{{ info.name }}</td>
+        <td class="category">{{ info.category }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+
+</html>

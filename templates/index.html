@@ -1,0 +1,36 @@
+<html>
+
+<head>
+<link rel="stylesheet" type="text/css" href={{ url_for('static', filename='style.css') }}/>
+<title>Unicoder: Unicode string decomposition for humans</title>
+</head>
+
+<body>
+<h1>Unicode!</h1>
+<form action="/result.html" method="post">
+    <!-- form itself -->
+    <p>
+    <label for="string" />
+    <textarea name="string" rows={{ config.rows }} cols={{ config.cols }}>{{ config.example_text }}</textarea>
+    </p>
+    <!-- various options -->
+    <p>
+    <label for="normalization">Normalization form:</label>
+    <select name="normalization" id="normalization">
+        <option value="none">(none)</option>
+        <option value="NFC">NFC</option>
+        <option value="NFD">NFD</option>
+        <option value="NFKC">NFKC</option>
+        <option value="NFKD">NFKD</option>
+    </select>
+    <label for="casefold">Case-fold?</label>
+    <input name="casefold" id="casefold" value="true" type="checkbox">
+    <label for="casefold">Strip whitespace?</label>
+    <input name="strip" id="strip" value="true" type="checkbox">
+    </p>
+    <p><input type="submit" value="Process"/></p>
+</form>
+<p><a href={{ url_for('static', filename='about.html') }}>About</a></p>
+</body>
+
+</html>
