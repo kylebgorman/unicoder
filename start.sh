@@ -1,1 +1,1 @@
-gunicorn app:app -w 1 --og-file -
+gunicorn app:app --workers 1 --log-file -
