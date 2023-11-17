@@ -135,8 +135,8 @@ def result() -> str:
     stringinfo = StringInfo(
         flask.request.args["string"],
         flask.request.args["normform"],
-        flask.request.args["casefold"],
-        flask.request.args["strip"],
+        "casefold" in flask.request.args,
+        "strip" in flask.request.args,
     )
     charinfos = [CharInfo(char) for char in stringinfo.can_string]
     return flask.render_template(
