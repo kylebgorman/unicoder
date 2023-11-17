@@ -90,6 +90,37 @@ class CharInfo:
         )
 
 
+class StringInfo:
+    """Helper for storing character info."""
+
+    raw_string: str
+    can_string: str
+    normalization_form: str
+    casefold: bool
+    strip: bool
+
+    def __init__(
+        self,
+        raw_string: str,
+        normalization_form: str,
+        casefold: bool,
+        strip: bool,
+    ):
+        self.raw_string = raw_string
+        self.normalization_form = normalization_form
+        self.casefold = casefold
+        self.strip = strip
+        self.can_string = raw_string
+        if self.normalization_form != "none":
+            self.can_string = unicodedata.normalize(
+                normalization_form, self.can_string
+            )
+        if self.casefold:
+            self.can_string = self.can_string.casefold()
+        if self.strip:
+            self.can_string = self.can_string.strip()
+
+
 ## Routes.
 
 
@@ -103,18 +134,17 @@ def index() -> str:
 def result() -> str:
     form = UnicoderForm(flask.request.form)
     if form.validate():
-        # Prepares the string.
-        string = form.string.data
-        if form.normalization.data != "none":
-            string = unicodedata.normalize(form.normalization.data, string)
-        if form.casefold.data:
-            string = string.casefold()
-        if form.strip.data:
-            string = string.strip()
+        stringinfo = StringInfo(
+            form.string.data,
+            form.normalization.data,
+            form.casefold.data,
+            form.strip.data,
+        )
+        charinfos = [CharInfo(char) for char in stringinfo.can_string]
         return flask.render_template(
             "result.html",
-            string=string,
-            infos=[CharInfo(char) for char in string],
+            stringinfo=stringinfo,
+            charinfos=charinfos,
         )
     return "<p>Form validation failed.</p>"
 
