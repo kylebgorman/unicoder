@@ -7,7 +7,13 @@
 
 <body>
 
-<p>Input string: <b>{{ string }}</b></p>
+<p>
+Raw input string: <b>{{ stringinfo.raw_string }}</b><br>
+Canonical input string: <b>{{ stringinfo.can_string }}</b><br>
+Normalization form: {{ stringinfo.normalization_form }}<br>
+Casefold?: {{ stringinfo.casefold }}<br>
+Strip?: {{ stringinfo.strip }}
+</p>
 
 <table>
     <tr>
@@ -17,13 +23,13 @@
         <th>Name</th>
         <th>Category</th>
     </tr>
-    {% for info in infos %}
+    {% for charinfo in charinfos %}
     <tr class="row">
-        <td class="char">{{ info.char }}</td>
-        <td class="decimal" align="right">{{ info.code }}</td>
-        <td class="hex" align="right">0x{{ '%0x' % info.code }}</td>
-        <td class="name">{{ info.name }}</td>
-        <td class="category">{{ info.category }}</td>
+        <td class="char">{{ charinfo.char }}</td>
+        <td class="decimal" align="right">{{ charinfo.code }}</td>
+        <td class="hex" align="right">0x{{ '%0x' % charinfo.code }}</td>
+        <td class="name">{{ charinfo.name }}</td>
+        <td class="category">{{ charinfo.category }}</td>
     </tr>
     {% endfor %}
 </table>
