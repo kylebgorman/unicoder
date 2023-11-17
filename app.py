@@ -30,7 +30,7 @@ class UnicoderForm(wtforms.Form):
     string = wtforms.StringField(
         "string", [wtforms.validators.Length(max=256)]
     )
-    normalization = wtforms.StringField("normalization")
+    normform = wtforms.StringField("normform")
     casefold = wtforms.BooleanField("casefold")
     strip = wtforms.BooleanField("strip")
 
@@ -95,25 +95,25 @@ class StringInfo:
 
     raw_string: str
     can_string: str
-    normalization_form: str
+    normform: str
     casefold: bool
     strip: bool
 
     def __init__(
         self,
         raw_string: str,
-        normalization_form: str,
+        normform: str,
         casefold: bool,
         strip: bool,
     ):
         self.raw_string = raw_string
-        self.normalization_form = normalization_form
+        self.normform = normform
         self.casefold = casefold
         self.strip = strip
         self.can_string = raw_string
-        if self.normalization_form != "none":
+        if self.normform != "none":
             self.can_string = unicodedata.normalize(
-                normalization_form, self.can_string
+                self.normform, self.can_string
             )
         if self.casefold:
             self.can_string = self.can_string.casefold()
@@ -130,23 +130,20 @@ def index() -> str:
     return flask.render_template("index.html", form=form)
 
 
-@app.route("/result.html", methods=["POST"])
+@app.route("/result", methods=["GET"])
 def result() -> str:
-    form = UnicoderForm(flask.request.form)
-    if form.validate():
-        stringinfo = StringInfo(
-            form.string.data,
-            form.normalization.data,
-            form.casefold.data,
-            form.strip.data,
-        )
-        charinfos = [CharInfo(char) for char in stringinfo.can_string]
-        return flask.render_template(
-            "result.html",
-            stringinfo=stringinfo,
-            charinfos=charinfos,
-        )
-    return "<p>Form validation failed.</p>"
+    stringinfo = StringInfo(
+        flask.request.args["string"],
+        flask.request.args["normform"],
+        flask.request.args["casefold"],
+        flask.request.args["strip"],
+    )
+    charinfos = [CharInfo(char) for char in stringinfo.can_string]
+    return flask.render_template(
+        "result.html",
+        stringinfo=stringinfo,
+        charinfos=charinfos,
+    )
 
 
 if __name__ == "__main__":
